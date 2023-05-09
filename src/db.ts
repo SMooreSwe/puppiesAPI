@@ -1,4 +1,5 @@
 import * as mongoDB from 'mongodb';
+import { ObjectId } from 'mongodb';
 import { Puppy } from 'types';
 
 require('dotenv').config();
@@ -22,6 +23,48 @@ const init = async () => {
 
 export const getAll = async () => {
     const data = await col.find<Puppy[]>({}).toArray()
+    return data;
+}
+
+export const getOne = async (id: ObjectId) => {
+ const data = await col.find<Puppy>({ _id: new ObjectId(id)})
+ return data;
+}
+
+export const createOne = async (addBreed: string, addName: string, addBirthdate: string) => {
+    const newPuppy : Puppy = {
+        breed: addBreed,
+        name: addName,
+        birthdate: addBirthdate,
+    }
+
+    try {
+        const insert = await col.insertOne({ newPuppy })
+        const data = {
+            _id: insert.insertedId,
+            ...newPuppy,
+        }
+        return data;
+    } catch (error) {
+        return error
+    }  
+}
+
+export const updateOne = async (id: ObjectId, newBreed: string, newName: string, newBirthdate: string) => {
+    const newPuppyDetails : Puppy = {
+        breed: newBreed,
+        name: newName,
+        birthdate: newBirthdate,
+    }
+
+    const data = await col.findOneAndReplace({ _id: new ObjectId(id)}, 
+    newPuppyDetails, 
+    { returnDocument: 'after'});
+    return data;
+}
+
+export const  deleteQuote = async (id: ObjectId) => {
+    const data = await col.deleteOne({ _id: new ObjectId(id) });
     return data;
 }
 
