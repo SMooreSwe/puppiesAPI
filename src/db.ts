@@ -1,5 +1,5 @@
 import * as mongoDB from 'mongodb';
-//import { ObjectId } from 'mongodb';
+import { Puppy } from 'types';
 
 require('dotenv').config();
 
@@ -21,7 +21,7 @@ const init = async () => {
 };
 
 export const getAll = async () => {
-    const data = await col.find({}).toArray()
+    const data = await col.find<Puppy[]>({}).toArray()
     return data;
 }
 
