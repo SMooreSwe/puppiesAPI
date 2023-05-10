@@ -18,13 +18,16 @@ const corsOptions ={
 app.use(cors(corsOptions))
 
 const puppyChecker = (req: Request, res: Response, next: NextFunction) => {
- if (!req.body.breed || !req.body.name || !req.body.birthdate) {
-  res.send(400).json({err: 'puppy details missing'})
+  const birthCheck = /^[\d]{4}-[\d]{2}-[\d]{2}$/;
+
+  if (!req.body.breed || !req.body.name || !req.body.birthdate) {
+  return res.send(400).json({err: 'puppy details missing'})
  } else if (typeof req.body.breed !== 'string' || !req.body.name || !req.body.birthdate ) {
-  res.send(400).json({err: 'please ensure puppy data is correct'})
- } else {
-  next()
- }
+  return res.send(400).json({err: 'please ensure puppy data is correct'})
+} else if (!birthCheck.test(req.body.birthdate)) {
+  return res.send(400).json({err: 'please ensure puppy birthdate is correct'})
+}
+  return next()
 }
 
 app.get('/api/test', (_req: Request, res: Response) => {
