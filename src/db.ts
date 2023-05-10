@@ -39,7 +39,7 @@ export const createOne = async (addBreed: string, addName: string, addBirthdate:
     }
 
     try {
-        const insert = await col.insertOne({ newPuppy })
+        const insert = await col.insertOne(newPuppy)
         const data = {
             _id: insert.insertedId,
             ...newPuppy,
