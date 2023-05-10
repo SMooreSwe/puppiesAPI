@@ -27,7 +27,7 @@ export const getAll = async () => {
 }
 
 export const getOne = async (id: ObjectId) => {
- const data = await col.find<Puppy>({ _id: new ObjectId(id)})
+ const data = await col.findOne<Puppy>({ _id: new ObjectId(id)})
  return data;
 }
 

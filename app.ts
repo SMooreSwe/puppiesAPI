@@ -1,6 +1,7 @@
-import { getAll } from './src/db';
+import { getAll, getOne } from './src/db';
 import express from 'express';
 import { Request, Response, Application } from 'express';
+import { ObjectId } from 'mongodb';
 
 //const bodyParser = require('body-parser');
 //const jsonParser = bodyParser.json();
@@ -23,6 +24,12 @@ app.get('/api/test', (_req: Request, res: Response) => {
 app.get('/api/puppies', async (_req: Request, res: Response) => {
   const puppyList = await getAll();
   return res.json(puppyList);
+}); 
+
+app.get('/api/puppies/:id', async (req: Request, res: Response) => {
+  const puppyId = new ObjectId(req.params.id)
+  const puppy = await getOne(puppyId);
+  return res.json(puppy);
 }); 
 
 export default app;
