@@ -30,6 +30,14 @@ const puppyChecker = (req: Request, res: Response, next: NextFunction) => {
   return next()
 }
 
+const idChecker = (req: Request, res: Response, next: NextFunction) => {
+  const hexCheck = /^[\da-fA-F]{24}$/
+  if (!req.params.id || !hexCheck.test(req.params.id)) {
+    return res.status(400).json({err: 'please use vaid puppy id'})
+  }
+  return next()
+}
+
 app.get('/api/test', (_req: Request, res: Response) => {
   return res.status(200).json({ test: 'is working as it should' });
 });
@@ -39,7 +47,7 @@ app.get('/api/puppies', async (_req: Request, res: Response) => {
   return res.json(puppyList);
 }); 
 
-app.get('/api/puppies/:id', async (req: Request, res: Response) => {
+app.get('/api/puppies/:id', idChecker, async (req: Request, res: Response) => {
   const puppyId = new ObjectId(req.params.id)
   const puppy = await getOne(puppyId);
   return res.json(puppy);
@@ -50,9 +58,12 @@ app.post('/api/puppies', jsonParser, puppyChecker, async (req: Request, res: Res
   return res.json(newPuppy)
 }); 
 
-app.put('/api/puppies/:id', jsonParser, puppyChecker, async (req: Request, res: Response) => {
+app.put('/api/puppies/:id', jsonParser, puppyChecker, idChecker, async (req: Request, res: Response) => {
   const puppyId = new ObjectId(req.params.id)
   const changedPuppy = await updateOne(puppyId, req.body.breed, req.body.name, req.body.birthdate)
+  if (changedPuppy === null) {
+    return res.status(404).json({err: 'puppy not found'})
+  }
   return res.json(changedPuppy)
 }); 
 
