@@ -1,4 +1,4 @@
-import { createOne, getAll, getOne } from './src/db';
+import { createOne, getAll, getOne, updateOne } from './src/db';
 import express, { NextFunction } from 'express';
 import { Request, Response, Application } from 'express';
 import { ObjectId } from 'mongodb';
@@ -21,11 +21,11 @@ const puppyChecker = (req: Request, res: Response, next: NextFunction) => {
   const birthCheck = /^[\d]{4}-[\d]{2}-[\d]{2}$/;
 
   if (!req.body.breed || !req.body.name || !req.body.birthdate) {
-  return res.send(400).json({err: 'puppy details missing'})
+  return res.status(400).json({err: 'puppy details missing'})
  } else if (typeof req.body.breed !== 'string' || !req.body.name || !req.body.birthdate ) {
-  return res.send(400).json({err: 'please ensure puppy data is correct'})
+  return res.status(400).json({err: 'please ensure puppy data is correct'})
 } else if (!birthCheck.test(req.body.birthdate)) {
-  return res.send(400).json({err: 'please ensure puppy birthdate is correct'})
+  return res.status(400).json({err: 'please ensure puppy birthdate is correct'})
 }
   return next()
 }
@@ -48,6 +48,12 @@ app.get('/api/puppies/:id', async (req: Request, res: Response) => {
 app.post('/api/puppies', jsonParser, puppyChecker, async (req: Request, res: Response) => {
   const newPuppy = await createOne(req.body.breed, req.body.name, req.body.birthdate)
   return res.json(newPuppy)
+}); 
+
+app.put('/api/puppies/:id', jsonParser, puppyChecker, async (req: Request, res: Response) => {
+  const puppyId = new ObjectId(req.params.id)
+  const changedPuppy = await updateOne(puppyId, req.body.breed, req.body.name, req.body.birthdate)
+  return res.json(changedPuppy)
 }); 
 
 export default app;

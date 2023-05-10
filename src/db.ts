@@ -60,7 +60,7 @@ export const updateOne = async (id: ObjectId, newBreed: string, newName: string,
     const data = await col.findOneAndReplace({ _id: new ObjectId(id)}, 
     newPuppyDetails, 
     { returnDocument: 'after'});
-    return data;
+    return data.value;
 }
 
 export const  deleteQuote = async (id: ObjectId) => {
