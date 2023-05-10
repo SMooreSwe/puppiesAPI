@@ -63,9 +63,9 @@ export const updateOne = async (id: ObjectId, newBreed: string, newName: string,
     return data.value;
 }
 
-export const  deleteQuote = async (id: ObjectId) => {
+export const  deleteOne = async (id: ObjectId) => {
     const data = await col.deleteOne({ _id: new ObjectId(id) });
-    return data;
+    return data.deletedCount;
 }
 
 init();

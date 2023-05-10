@@ -1,4 +1,4 @@
-import { createOne, getAll, getOne, updateOne } from './src/db';
+import { createOne, deleteOne, getAll, getOne, updateOne } from './src/db';
 import express, { NextFunction } from 'express';
 import { Request, Response, Application } from 'express';
 import { ObjectId } from 'mongodb';
@@ -66,5 +66,12 @@ app.put('/api/puppies/:id', jsonParser, puppyChecker, idChecker, async (req: Req
   }
   return res.json(changedPuppy)
 }); 
+
+app.delete('/api/puppies/:id', idChecker, async (req: Request, res: Response) =>{
+  const puppyId = new ObjectId(req.params.id)
+  await deleteOne(puppyId)
+  return res.sendStatus(204)
+
+});
 
 export default app;
