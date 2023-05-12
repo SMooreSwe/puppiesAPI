@@ -22,7 +22,7 @@ const puppyChecker = (req: Request, res: Response, next: NextFunction) => {
 
   if (!req.body.breed || !req.body.name || !req.body.birthdate) {
   return res.status(400).json({err: 'puppy details missing'})
- } else if (typeof req.body.breed !== 'string' || !req.body.name || !req.body.birthdate ) {
+ } else if (typeof req.body.name !== 'string' || req.body.breed !== 'string' || req.body.birthdate !== 'string') {
   return res.status(400).json({err: 'please ensure puppy data is correct'})
 } else if (!birthCheck.test(req.body.birthdate)) {
   return res.status(400).json({err: 'please ensure puppy birthdate is correct'})
