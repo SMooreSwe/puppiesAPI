@@ -2,6 +2,8 @@
 
 This is a project to build a RESTful API in typescript using Node.js. I created a database in MongoDB and protected sensitive information with env variables. The aim was to practice and refine my use of the tools outlined, as well as regex and the use of Express middleware.
 
+The frontend UI can be found [here](https://github.com/SMooreSwe/puppies-frontend)
+
 ### The Endpoints
 
 - GET: `api/puppies`. Returns an array of all puppies.
